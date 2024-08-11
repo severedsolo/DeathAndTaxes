@@ -25,6 +25,7 @@ public class Plugin : BasePlugin
         Log.LogInfo("Plugin is patched");
         Lib.Time.OnTimeInitialized += RegisterTimeEvents;
         Lib.SaveGame.OnAfterSave += SaveData;
+        Lib.SaveGame.OnAfterLoad += LoadData;
         BindConfigs();
     }
 
