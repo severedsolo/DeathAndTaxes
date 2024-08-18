@@ -1,9 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes;
 using SOD.Common;
-using System.Collections.Generic;
-using Il2CppSystem.Linq;
-using SOD.Common.Extensions;
 
 namespace DeathAndTaxes;
 
@@ -22,6 +19,7 @@ public class JobModifier
         }
     }
     [HarmonyPostfix]
+    // ReSharper disable once InconsistentNaming
     public static void PostFix(Case __instance)
     {
         if (!Settings.IncomeTaxEnabled.Value && !Settings.AdjustSocialCreditOnJobCompletion.Value) return;
@@ -107,6 +105,7 @@ public class JobModifier
         return jobPassed;
     }
 
+    [SuppressMessage("ReSharper", "ConvertIfStatementToConditionalTernaryExpression")]
     private static void BroadcastOutcome(bool jobPassed, bool isMurder)
     {
         if (jobPassed)
@@ -124,7 +123,6 @@ public class JobModifier
     private static int SocialCreditForJob(Case job)
     {
         if (IsMurder(job)) return GameplayControls.Instance.socialCreditForMurders;
-        if (job.caseType == Case.CaseType.sideJob) return GameplayControls.Instance.socialCreditForSideJobs;
-        return 0;
+        return job.caseType == Case.CaseType.sideJob ? GameplayControls.Instance.socialCreditForSideJobs : 0;
     }
 }

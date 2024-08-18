@@ -2,11 +2,11 @@ namespace DeathAndTaxes;
 
 public static class SCFRandom
 {
-    private static Random RandomRoller = new Random();
+    private static readonly Random RandomRoller = new();
 
-    public static int Next(int minNumber, int maxNumer)
+    public static int Next(int minNumber, int maxNumber)
     {
-        int returnedNumber = RandomRoller.Next(minNumber, maxNumer);
+        int returnedNumber = RandomRoller.Next(minNumber, maxNumber);
         Plugin.Instance.SCFLog("Rolled "+returnedNumber, LogLevel.Info);
         return returnedNumber;
     }

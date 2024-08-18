@@ -1,7 +1,5 @@
 using BepInEx.Configuration;
-using BepInEx.Unity.IL2CPP;
-using SOD.Common.BepInEx.Configuration;
-using SOD.Common.Extensions;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace DeathAndTaxes;
 

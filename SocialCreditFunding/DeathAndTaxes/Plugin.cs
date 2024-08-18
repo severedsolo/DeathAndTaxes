@@ -4,7 +4,6 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppSystem.Text;
 using SOD.Common;
-using SOD.Common.ConfigBindings;
 using SOD.Common.Helpers;
 
 namespace DeathAndTaxes;
@@ -20,7 +19,7 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         Instance = this;
-        var harmony = new Harmony("io.severedsolo.sod.deathandtaxes");
+        Harmony harmony = new("io.severedsolo.sod.deathandtaxes");
         harmony.PatchAll(Assembly.GetExecutingAssembly());
         Log.LogInfo("Plugin is patched");
         Lib.Time.OnTimeInitialized += RegisterTimeEvents;
@@ -49,10 +48,8 @@ public class Plugin : BasePlugin
     {
         StringBuilder saveData = new StringBuilder();
         saveData.Append(PatchSocialCreditLossOnFined.Save());
-        using (StreamWriter writer = new StreamWriter(GetSavePath(e.FilePath)))
-        {
-            writer.Write(saveData.ToString());
-        }
+        using StreamWriter writer = new StreamWriter(GetSavePath(e.FilePath));
+        writer.Write(saveData.ToString());
     }
 
     private void LoadData(object? sender, SaveGameArgs e)

@@ -5,12 +5,12 @@ namespace DeathAndTaxes;
 
 public static class LandValueTaxHandler
 {
-    private static int DayTaxLastPaid = 0;
+    private static int dayTaxLastPaid;
     public static void PayTax()
     {
         if (!Settings.LandValueTaxEnabled.Value) return;
         //Seems to fire twice? No idea why. We can fix that by just skipping if we already did it.
-        if (DayTaxLastPaid == Lib.Time.CurrentDateTime.Day) return;
+        if (dayTaxLastPaid == Lib.Time.CurrentDateTime.Day) return;
         Plugin.Instance.SCFLog("Paying Land Tax on all owned apartments", LogLevel.Info);
         List<NewAddress> playerApartments = Player.Instance.apartmentsOwned.ToList();
         if (playerApartments.Count == 0) return;
@@ -36,7 +36,7 @@ public static class LandValueTaxHandler
             }
         }
 
-        DayTaxLastPaid = Lib.Time.CurrentDateTime.Day;
+        dayTaxLastPaid = Lib.Time.CurrentDateTime.Day;
     }
 
     private static ResidenceController? FindNewResidence()
