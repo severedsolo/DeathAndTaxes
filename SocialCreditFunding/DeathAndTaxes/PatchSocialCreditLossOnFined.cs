@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Il2CppSystem.Linq;
 using SOD.Common;
 
 namespace DeathAndTaxes;
@@ -18,6 +19,13 @@ public class PatchSocialCreditLossOnFined
     [HarmonyPostfix]
     private static void Postfix()
     {
+        FinePlayerMoney();
+        FinePlayerSocialCredit();
+        PreviousFines = 0;
+    }
+
+    private static void FinePlayerSocialCredit()
+    {
         if (!Settings.SocialCreditLossOnDeath.Value) return;
         int totalFines = PreviousFines + SkipFineEscapeCheckPatch.GetTotalActiveFines();
         int socialCreditToDeduct = (int)(totalFines*Settings.FinedSocialCreditLossModifier.Value);
@@ -26,7 +34,13 @@ public class PatchSocialCreditLossOnFined
         Plugin.Instance.SCFLog("Player was fined "+totalFines, LogLevel.Info);
         Plugin.Instance.SCFLog("Deducted "+socialCreditToDeduct+" social credit from player", LogLevel.Info);
         SocialCreditUtilities.AdjustPerksToLevel();
-        PreviousFines = 0;
+    }
+
+    private static void FinePlayerMoney()
+    {
+        if (!Settings.PersistentFines.Value) return;
+        GameplayController.Instance.AddMoney(-PreviousFines, false, "persistent fines");
+        if (!Settings.SocialCreditLossOnDeath.Value) Lib.GameMessage.Broadcast("You were fined " + PreviousFines + "cr");
     }
 
     public static string Save()
