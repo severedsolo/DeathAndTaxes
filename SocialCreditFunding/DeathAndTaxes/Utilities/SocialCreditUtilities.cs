@@ -1,11 +1,11 @@
 using SOD.Common;
 using SOD.Common.Extensions;
 
-namespace DeathAndTaxes;
+namespace DeathAndTaxes.Utilities;
 
-public static class SocialCreditUtilities
+internal static class SocialCreditUtilities
 {
-    public static void AdjustPerksToLevel()
+    internal static void AdjustPerksToLevel()
     {
         //Remove perks the player has accrued
         //We start at Lv1 and 0 perks, so minus 1 when considering amount of perks to remove.
@@ -18,11 +18,11 @@ public static class SocialCreditUtilities
             GameplayController.Instance.socialCreditPerks.Remove(buff);
             if (GameplayController.Instance.socialCreditPerks.Contains(buff))
             {
-                Plugin.Instance.SCFLog("Failed to remove buff "+buff.description, LogLevel.Error);
+                Plugin.SCFLog("Failed to remove buff " + buff.description, LogLevel.Error);
                 return;
             }
-            Lib.GameMessage.Broadcast("Removed: "+buff.description);
-            Plugin.Instance.SCFLog("Removed buff "+buff.description, LogLevel.Info);
+            Lib.GameMessage.Broadcast("Removed: " + buff.description);
+            Plugin.SCFLog("Removed buff " + buff.description, LogLevel.Info);
         }
     }
 }

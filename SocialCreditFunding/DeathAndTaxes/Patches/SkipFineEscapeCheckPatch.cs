@@ -1,14 +1,14 @@
 using HarmonyLib;
 using SOD.Common.Extensions;
 
-namespace DeathAndTaxes;
+namespace DeathAndTaxes.Patches;
 
 [HarmonyPatch(typeof(StatusController), nameof(StatusController.FineEscapeCheck))]
-public class SkipFineEscapeCheckPatch
+internal class SkipFineEscapeCheckPatch
 {
     [HarmonyPrefix]
     // ReSharper disable once UnusedMember.Global
-    public static void Prefix()
+    internal static void Prefix()
     {
         if (!Settings.PersistentFines.Value) return;
         int lastFineAmount = PatchSocialCreditLossOnFined.PreviousFines;
@@ -21,10 +21,10 @@ public class SkipFineEscapeCheckPatch
         PatchSocialCreditLossOnFined.PreviousFines += GetTotalActiveFines();
         //Stop it logging on every check. We only need to log when it actually changes
         if (PatchSocialCreditLossOnFined.PreviousFines == lastFineAmount) return;
-        Plugin.Instance.SCFLog("Fines cleared. New total fines are "+PatchSocialCreditLossOnFined.PreviousFines, LogLevel.Info);
+        Plugin.SCFLog("Fines cleared. New total fines are " + PatchSocialCreditLossOnFined.PreviousFines, LogLevel.Info);
     }
 
-    public static int GetTotalActiveFines()
+    internal static int GetTotalActiveFines()
     {
         int totalFines = 0;
         foreach (Il2CppSystem.Collections.Generic.KeyValuePair<StatusController.StatusInstance, Il2CppSystem.Collections.Generic.List<StatusController.StatusCount>> status in StatusController.Instance.activeStatusCounts)
