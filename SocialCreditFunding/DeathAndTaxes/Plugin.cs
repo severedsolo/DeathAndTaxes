@@ -12,6 +12,7 @@ using SOD.Common.Helpers;
 namespace DeathAndTaxes;
 
 [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+[BepInDependency(SOD.Common.Plugin.PLUGIN_GUID, BepInDependency.DependencyFlags.HardDependency)]
 public class Plugin : PluginController<Plugin>
 {
     public const string PLUGIN_GUID = "Severedsolo.SOD.DeathAndTaxes";
