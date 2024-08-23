@@ -1,17 +1,16 @@
 using HarmonyLib;
-using Il2CppSystem.Linq;
 using SOD.Common;
 
 namespace DeathAndTaxes;
 
 [HarmonyPatch(typeof(StatusController), nameof(StatusController.PayActiveFines))]
-public class PatchSocialCreditLossOnFined
+internal class PatchSocialCreditLossOnFined
 {
-    public static int PreviousFines { get; set; }= 0;
-    public static bool PlayerWasRecentlyKnockedOut { get; set; }
+    internal static int PreviousFines { get; set; }= 0;
+    internal static bool PlayerWasRecentlyKnockedOut { get; set; }
     
     [HarmonyPrefix]
-    public static void Prefix()
+    internal static void Prefix()
     {
         PlayerWasRecentlyKnockedOut = true;
     }
@@ -43,13 +42,13 @@ public class PatchSocialCreditLossOnFined
         if (!Settings.SocialCreditLossOnDeath.Value) Lib.GameMessage.Broadcast("You were fined " + PreviousFines + "cr");
     }
 
-    public static string Save()
+    internal static string Save()
     {
         if (!Settings.SocialCreditLossOnDeath.Value) return String.Empty;
         int totalFines = PreviousFines + SkipFineEscapeCheckPatch.GetTotalActiveFines();
         return totalFines.ToString();
     }
-    public static void Load(string s)
+    internal static void Load(string s)
     {
         if(!int.TryParse(s, out int finesToRestore)) return;
         if (finesToRestore == 0) return;

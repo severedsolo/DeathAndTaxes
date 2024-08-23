@@ -1,26 +1,23 @@
 ﻿using System.Reflection;
+using System.Text;
 using BepInEx;
-using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Il2CppSystem.Text;
 using SOD.Common;
+using SOD.Common.BepInEx;
 using SOD.Common.Helpers;
 
 namespace DeathAndTaxes;
 
 [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
-public class Plugin : BasePlugin
+public class Plugin : PluginController<Plugin>
 {
     public const string PLUGIN_GUID = "Severedsolo.SOD.DeathAndTaxes";
     public const string PLUGIN_NAME = "DeathAndTaxes";
     public const string PLUGIN_VERSION = "1.0.0";
-    public static Plugin Instance;
     
     public override void Load()
     {
-        Instance = this;
-        Harmony harmony = new("io.severedsolo.sod.deathandtaxes");
-        harmony.PatchAll(Assembly.GetExecutingAssembly());
+        Harmony.PatchAll(Assembly.GetExecutingAssembly());
         Log.LogInfo("Plugin is patched");
         Lib.Time.OnTimeInitialized += RegisterTimeEvents;
         Lib.SaveGame.OnAfterSave += SaveData;
@@ -30,7 +27,6 @@ public class Plugin : BasePlugin
 
     private void BindConfigs()
     {
-        
         Settings.IncomeTaxEnabled = Config.Bind("Taxes", "DeathAndTaxes.IncomeTaxEnabled", true, "Income Tax enabled");
         Settings.IncomeTaxModifier= Config.Bind("Taxes", "DeathAndTaxes.IncomeTaxModifier", 10, "Each Social Credit rating below 10 will attract this much tax (ie, at 10%, social credit level of 1 will attract 90% (10-1=9*10=90)) (requires IncomeTaxEnabled to be true)");
         Settings.AdjustSocialCreditOnJobCompletion = Config.Bind("SocialCredit", "DeathAndTaxes.AdjustSocialCreditOnJobCompletion", true, "Adjust social credit to completed objectives (eg when solving a murder, if you only get 4 right you'll get 400 SC instead of 500)");
@@ -61,7 +57,7 @@ public class Plugin : BasePlugin
         {
             while (true)
             {
-                string line = reader.ReadLine();
+                string? line = reader.ReadLine();
                 if (line == null)
                 {
                     break;
@@ -74,7 +70,7 @@ public class Plugin : BasePlugin
         PatchSocialCreditLossOnFined.Load(saveData[0]);
     }
     
-    private string GetSavePath(string savePath)
+    private static string GetSavePath(string savePath)
     {
         string path = Lib.SaveGame.GetUniqueString(savePath);
         return Lib.SaveGame.GetSavestoreDirectoryPath(Assembly.GetExecutingAssembly(), $"DeathAndTaxes_{path}.txt");
@@ -90,7 +86,7 @@ public class Plugin : BasePlugin
         LandValueTaxHandler.PayTax();
     }
 
-    public void SCFLog(string messageToLog, LogLevel logLevel)
+    internal void SCFLog(string messageToLog, LogLevel logLevel)
     {
         switch (logLevel)
         {
@@ -105,5 +101,4 @@ public class Plugin : BasePlugin
                 break;
         }
     }
-    
 }

@@ -3,9 +3,9 @@ using SOD.Common.Extensions;
 
 namespace DeathAndTaxes;
 
-public static class SocialCreditUtilities
+internal static class SocialCreditUtilities
 {
-    public static void AdjustPerksToLevel()
+    internal static void AdjustPerksToLevel()
     {
         //Remove perks the player has accrued
         //We start at Lv1 and 0 perks, so minus 1 when considering amount of perks to remove.

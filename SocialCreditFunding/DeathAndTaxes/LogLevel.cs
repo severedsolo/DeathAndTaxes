@@ -1,6 +1,6 @@
 namespace DeathAndTaxes;
 
-public enum LogLevel
+internal enum LogLevel
 {
     Info,
     Warning,

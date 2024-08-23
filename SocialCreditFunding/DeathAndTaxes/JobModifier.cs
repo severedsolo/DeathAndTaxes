@@ -5,7 +5,7 @@ using SOD.Common;
 namespace DeathAndTaxes;
 
 [HarmonyPatch(typeof(Case), nameof(Case.Resolve))]
-public class JobModifier
+internal class JobModifier
 {
     private static int SocialCreditLevel => GameplayController.Instance.GetCurrentSocialCreditLevel();
     private static int TaxRate => Math.Max((10 - SocialCreditLevel) * Settings.IncomeTaxModifier.Value, 0);
@@ -20,7 +20,7 @@ public class JobModifier
     }
     [HarmonyPostfix]
     // ReSharper disable once InconsistentNaming
-    public static void PostFix(Case __instance)
+    internal static void PostFix(Case __instance)
     {
         if (!Settings.IncomeTaxEnabled.Value && !Settings.AdjustSocialCreditOnJobCompletion.Value) return;
         Plugin.Instance.SCFLog("Job handed in. Attempting to calculate reward modifier", LogLevel.Info);

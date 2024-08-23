@@ -3,10 +3,10 @@ using SOD.Common.Extensions;
 
 namespace DeathAndTaxes;
 
-public static class LandValueTaxHandler
+internal static class LandValueTaxHandler
 {
     private static int dayTaxLastPaid;
-    public static void PayTax()
+    internal static void PayTax()
     {
         if (!Settings.LandValueTaxEnabled.Value) return;
         //Seems to fire twice? No idea why. We can fix that by just skipping if we already did it.
