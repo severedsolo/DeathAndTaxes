@@ -1,7 +1,7 @@
 using HarmonyLib;
 using SOD.Common.Extensions;
 
-namespace DeathAndTaxes;
+namespace DeathAndTaxes.Patches;
 
 [HarmonyPatch(typeof(StatusController), nameof(StatusController.FineEscapeCheck))]
 internal class SkipFineEscapeCheckPatch
@@ -21,7 +21,7 @@ internal class SkipFineEscapeCheckPatch
         PatchSocialCreditLossOnFined.PreviousFines += GetTotalActiveFines();
         //Stop it logging on every check. We only need to log when it actually changes
         if (PatchSocialCreditLossOnFined.PreviousFines == lastFineAmount) return;
-        Plugin.Instance.SCFLog("Fines cleared. New total fines are "+PatchSocialCreditLossOnFined.PreviousFines, LogLevel.Info);
+        Plugin.SCFLog("Fines cleared. New total fines are " + PatchSocialCreditLossOnFined.PreviousFines, LogLevel.Info);
     }
 
     internal static int GetTotalActiveFines()

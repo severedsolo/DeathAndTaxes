@@ -1,8 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
+using DeathAndTaxes.Utilities;
 using HarmonyLib;
 using SOD.Common;
 
-namespace DeathAndTaxes;
+namespace DeathAndTaxes.Patches;
 
 [HarmonyPatch(typeof(Case), nameof(Case.Resolve))]
 internal class JobModifier
@@ -14,7 +15,7 @@ internal class JobModifier
     {
         get
         {
-            if (TaxRate > 0) return TaxRate+"% income tax deducted";
+            if (TaxRate > 0) return TaxRate + "% income tax deducted";
             return "Echelon Program member. No tax is due";
         }
     }
@@ -23,20 +24,20 @@ internal class JobModifier
     internal static void PostFix(Case __instance)
     {
         if (!Settings.IncomeTaxEnabled.Value && !Settings.AdjustSocialCreditOnJobCompletion.Value) return;
-        Plugin.Instance.SCFLog("Job handed in. Attempting to calculate reward modifier", LogLevel.Info);
+        Plugin.SCFLog("Job handed in. Attempting to calculate reward modifier", LogLevel.Info);
         if (!__instance.isSolved)
         {
             if (Settings.AdjustSocialCreditOnJobCompletion.Value && IsMurder(__instance))
             {
                 GameplayController.Instance.AddSocialCredit(-Settings.MurderFailPenalty.Value, true, "Failed murder case");
                 SocialCreditUtilities.AdjustPerksToLevel();
-                Plugin.Instance.SCFLog("Murder was not solved. Penalising player", LogLevel.Info);
+                Plugin.SCFLog("Murder was not solved. Penalising player", LogLevel.Info);
             }
-            Plugin.Instance.SCFLog("Job was not solved. Aborting", LogLevel.Info);
+            Plugin.SCFLog("Job was not solved. Aborting", LogLevel.Info);
             return;
         }
         int numberOfObjectivesCorrect = CorrectObjectives(__instance);
-        if(Settings.AdjustSocialCreditOnJobCompletion.Value) AdjustSocialCreditRewards(__instance, numberOfObjectivesCorrect);
+        if (Settings.AdjustSocialCreditOnJobCompletion.Value) AdjustSocialCreditRewards(__instance, numberOfObjectivesCorrect);
         if (!Settings.IncomeTaxEnabled.Value) return;
         GameplayController.Instance.AddMoney(-TotalTax(__instance), true, "Social Credit Tax");
         Lib.GameMessage.Broadcast(TaxStringForPlayer);
@@ -58,10 +59,10 @@ internal class JobModifier
         int totalReward = GetTotalReward(job);
         float taxModifier = TaxRate / 100.0f;
         int totalTax = (int)(totalReward * taxModifier);
-        Plugin.Instance.SCFLog("Taxing player at "+TaxRate+"% for "+totalTax, LogLevel.Info);
+        Plugin.SCFLog("Taxing player at " + TaxRate + "% for " + totalTax, LogLevel.Info);
         return totalTax;
     }
-    
+
     private static int GetTotalReward(Case job)
     {
         int reward = 0;
@@ -72,7 +73,7 @@ internal class JobModifier
             reward += resolveQuestion.reward;
             counter++;
         };
-        Plugin.Instance.SCFLog("Found "+counter+" completed rewards with a total value of "+reward, LogLevel.Info);
+        Plugin.SCFLog("Found " + counter + " completed rewards with a total value of " + reward, LogLevel.Info);
         return reward;
     }
 
@@ -84,7 +85,7 @@ internal class JobModifier
         if (!ClientIsHappy(percentageOfObjectivesComplete, job)) actualSocialCreditToBeReceived -= baseSocialCredit;
         int modifier = actualSocialCreditToBeReceived - baseSocialCredit;
         GameplayController.Instance.AddSocialCredit(modifier, true, "Didn't meet all objectives");
-        Plugin.Instance.SCFLog("Social Credit adjusted by "+modifier, LogLevel.Info);
+        Plugin.SCFLog("Social Credit adjusted by " + modifier, LogLevel.Info);
         SocialCreditUtilities.AdjustPerksToLevel();
     }
 
@@ -96,12 +97,12 @@ internal class JobModifier
     private static bool ClientIsHappy(float percentageOfObjectivesComplete, Case job)
     {
         if (!Settings.CanFailCompletedCases.Value) return true;
-        Plugin.Instance.SCFLog("Chance of Success: "+Math.Round(percentageOfObjectivesComplete,2), LogLevel.Info);
+        Plugin.SCFLog("Chance of Success: " + Math.Round(percentageOfObjectivesComplete, 2), LogLevel.Info);
         //For the purposes of this the state is a "client" for murder cases
-        double randomRoll = SCFRandom.NextDouble(); 
+        double randomRoll = SCFRandom.NextDouble();
         bool jobPassed = randomRoll < percentageOfObjectivesComplete;
         BroadcastOutcome(jobPassed, IsMurder(job));
-        Plugin.Instance.SCFLog("Job passed: "+jobPassed, LogLevel.Info);
+        Plugin.SCFLog("Job passed: " + jobPassed, LogLevel.Info);
         return jobPassed;
     }
 

@@ -13,7 +13,7 @@ public static class Settings
     public static ConfigEntry<bool> LandValueTaxEnabled { get; set; }
     public static ConfigEntry<float> LandValueTaxRate { get; set; }
     public static ConfigEntry<bool> SocialCreditLossOnDeath { get; set; }
-    
     public static ConfigEntry<float> FinedSocialCreditLossModifier { get; set; }
     public static ConfigEntry<bool> PersistentFines { get; set; }
+    public static ConfigEntry<bool> EnableLogging { get; set; }
 }

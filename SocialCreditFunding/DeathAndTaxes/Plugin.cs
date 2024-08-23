@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using System.Text;
 using BepInEx;
+using DeathAndTaxes.Handlers;
+using DeathAndTaxes.Integrations;
+using DeathAndTaxes.Patches;
 using HarmonyLib;
 using SOD.Common;
 using SOD.Common.BepInEx;
@@ -18,11 +21,34 @@ public class Plugin : PluginController<Plugin>
     public override void Load()
     {
         Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        Log.LogInfo("Plugin is patched");
+        SCFLog("Plugin is patched", LogLevel.Info, true);
         Lib.Time.OnTimeInitialized += RegisterTimeEvents;
         Lib.SaveGame.OnAfterSave += SaveData;
         Lib.SaveGame.OnAfterLoad += LoadData;
+        Lib.SaveGame.OnAfterNewGame += ResetDataOnNewGame;
+        Lib.PluginDetection.OnAllPluginsFinishedLoading += ExecuteIntegrations;
         BindConfigs();
+    }
+
+    /// <summary>
+    /// Other mod integrations
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ExecuteIntegrations(object? sender, EventArgs e)
+    {
+        var integrations = new Integration[] 
+        { 
+            new LifeAndLivingIntegration() 
+        };
+
+        foreach (var integration in integrations)
+            integration.Execute();
+    }
+
+    private void ResetDataOnNewGame(object? sender, EventArgs e)
+    {
+        PatchSocialCreditLossOnFined.Reset();
     }
 
     private void BindConfigs()
@@ -37,7 +63,8 @@ public class Plugin : PluginController<Plugin>
         Settings.SocialCreditLossOnDeath = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditLossOnDeath", true, "Apply a social credit penalty when detained?");
         Settings.FinedSocialCreditLossModifier = Config.Bind("SocialCredit", "DeathAndTaxes.FinedSocialCreditLossModifier", 0.1f, "What percentage of fines should be converted to social credit (1=100%)? (Requires SocialCreditLossOnDeath to be true)");
         Settings.PersistentFines = Config.Bind("Difficulty", "DeathAndTaxes.PersistentFines", true, "Should fines be persistent (ie not lost when you exit a building)?");
-        SCFLog("Bound all configs", LogLevel.Info);
+        Settings.EnableLogging = Config.Bind("Debugging", "DeathAndTaxes.EnableLogging", false, "Should logging in the console be enabled.");
+        SCFLog("Bound all configs", LogLevel.Info, true);
     }
 
     private void SaveData(object? sender, SaveGameArgs e)
@@ -86,11 +113,12 @@ public class Plugin : PluginController<Plugin>
         LandValueTaxHandler.PayTax();
     }
 
-    internal void SCFLog(string messageToLog, LogLevel logLevel)
+    internal static void SCFLog(string messageToLog, LogLevel logLevel, bool forcePrint = false)
     {
         switch (logLevel)
         {
             case LogLevel.Info:
+                if (!forcePrint && !Settings.EnableLogging.Value) return;
                 Log.LogInfo(messageToLog);
                 break;
             case LogLevel.Warning:
@@ -101,4 +129,11 @@ public class Plugin : PluginController<Plugin>
                 break;
         }
     }
+}
+
+internal enum LogLevel
+{
+    Info,
+    Warning,
+    Error,
 }
