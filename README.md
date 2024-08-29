@@ -13,10 +13,6 @@ This is an attempt to fix the current gameplay loop of "Solve one case and you n
 - "Land Value Tax" - pay a tax on your owned apartments every day or they will be repossessed (this is basically ApartmentRent but rather than locking you out, the apartment will just be lost).
 
 ## Known Issues
-### Persistent Fines
-- UI is a bit screwy. There's a bug in the base game where fines aren't persisted when loading a save, so what you see on screen will only be "fines since you loaded this save". Actual fines will be deducted and communicated to you when you die.
-- Likewise the UI isn't really setup to persist fines between leaving buildings, so you'll see multiple "fine boxes". If it gets annoying just reload your save and they will disappear (due to above bug).
-- I couldn't figure out a good way to get the fine amounts directly so we cheat and "simulate" taking the fines and then give you the money back. This means if you don't actually have enough money to pay, your penalty will be based on money in hand instead.
 
 ### Social Credit Adjustments
 - Doesn't always tell you social credit has been removed. I'm telling the game to, but it doesn't always show. Actual social credit amounts will be correct.
