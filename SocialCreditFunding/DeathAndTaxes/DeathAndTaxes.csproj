@@ -24,16 +24,16 @@
 
 	<ItemGroup>
 	  <Reference Include="Assembly-CSharp">
-	    <HintPath>libs\Assembly-CSharp.dll</HintPath>
+	    <HintPath>bin\Release\net6.0\Assembly-CSharp.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Il2Cppmscorlib">
-	    <HintPath>libs\Il2Cppmscorlib.dll</HintPath>
+	    <HintPath>bin\Release\net6.0\Il2Cppmscorlib.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine">
-	    <HintPath>libs\UnityEngine.dll</HintPath>
+	    <HintPath>bin\Release\net6.0\UnityEngine.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine.CoreModule">
-	    <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+	    <HintPath>bin\Release\net6.0\UnityEngine.CoreModule.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

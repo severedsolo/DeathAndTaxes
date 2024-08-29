@@ -50,6 +50,7 @@ public class Plugin : PluginController<Plugin>
     private void ResetDataOnNewGame(object? sender, EventArgs e)
     {
         PatchSocialCreditLossOnFined.Reset();
+        Utilities.SocialCreditUtilities.SetSocialCreditPayouts();
     }
 
     private void BindConfigs()
@@ -65,6 +66,9 @@ public class Plugin : PluginController<Plugin>
         Settings.FinedSocialCreditLossModifier = Config.Bind("SocialCredit", "DeathAndTaxes.FinedSocialCreditLossModifier", 0.1f, "What percentage of fines should be converted to social credit (1=100%)? (Requires SocialCreditLossOnDeath to be true)");
         Settings.PersistentFines = Config.Bind("Difficulty", "DeathAndTaxes.PersistentFines", true, "Should fines be persistent (ie not lost when you exit a building)?");
         Settings.EnableLogging = Config.Bind("Debugging", "DeathAndTaxes.EnableLogging", false, "Should logging in the console be enabled.");
+        Settings.FineReducedBySocialCreditRating = Config.Bind("Difficulty", "DeathAndTaxes.FineReducedBySocialCreditRating", false, "Should fines be reduced the higher up the social credit ladder you are?");
+        Settings.SocialCreditForMurderSolve = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditForMurderSolve", 500, "How much social credit should a murder case pay? (before any modifiers)");
+        Settings.SocialCreditForSideJobSolve = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditForSideJobSolve", 250, "How much social credit should a murder case pay? (before any modifiers)");
         SCFLog("Bound all configs", LogLevel.Info, true);
     }
 
@@ -96,6 +100,7 @@ public class Plugin : PluginController<Plugin>
 
         if (saveData.Count == 0) return;
         PatchSocialCreditLossOnFined.Load(saveData[0]);
+        Utilities.SocialCreditUtilities.SetSocialCreditPayouts();
     }
     
     private static string GetSavePath(string savePath)

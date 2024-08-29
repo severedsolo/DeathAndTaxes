@@ -16,4 +16,9 @@ public static class Settings
     public static ConfigEntry<float> FinedSocialCreditLossModifier { get; set; }
     public static ConfigEntry<bool> PersistentFines { get; set; }
     public static ConfigEntry<bool> EnableLogging { get; set; }
+    public static ConfigEntry<bool> FineReducedBySocialCreditRating { get; set; }
+    
+    public static ConfigEntry<int> SocialCreditForMurderSolve { get; set; }
+    
+    public static ConfigEntry<int> SocialCreditForSideJobSolve { get; set; }
 }

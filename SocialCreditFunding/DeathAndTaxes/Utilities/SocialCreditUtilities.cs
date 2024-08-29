@@ -25,4 +25,10 @@ internal static class SocialCreditUtilities
             Plugin.SCFLog("Removed buff " + buff.description, LogLevel.Info);
         }
     }
+
+    public static void SetSocialCreditPayouts()
+    {
+        GameplayControls.Instance.socialCreditForMurders = Settings.SocialCreditForMurderSolve.Value;
+        GameplayControls.Instance.socialCreditForSideJobs = Settings.SocialCreditForSideJobSolve.Value;
+    }
 }
