@@ -19,8 +19,8 @@ internal class PatchSocialCreditLossOnFined
     [HarmonyPostfix]
     private static void Postfix()
     {
-        FinePlayerMoney();
         FinePlayerSocialCredit();
+        FinePlayerMoney();
         PreviousFines = 0;
     }
 
@@ -30,7 +30,7 @@ internal class PatchSocialCreditLossOnFined
         int totalFines = PreviousFines + SkipFineEscapeCheckPatch.GetTotalActiveFines();
         int socialCreditToDeduct = (int)(totalFines * Settings.FinedSocialCreditLossModifier.Value);
         GameplayController.Instance.AddSocialCredit(-socialCreditToDeduct, true, "Player was fined " + totalFines);
-        Lib.GameMessage.Broadcast("You were fined " + totalFines + "cr and lost " + socialCreditToDeduct + " social credit");
+        Lib.GameMessage.Broadcast("You lost " + socialCreditToDeduct + " social credit");
         Plugin.SCFLog("Player was fined " + totalFines, LogLevel.Info);
         Plugin.SCFLog("Deducted " + socialCreditToDeduct + " social credit from player", LogLevel.Info);
         SocialCreditUtilities.AdjustPerksToLevel();
@@ -39,8 +39,13 @@ internal class PatchSocialCreditLossOnFined
     private static void FinePlayerMoney()
     {
         if (!Settings.PersistentFines.Value) return;
-        GameplayController.Instance.AddMoney(-PreviousFines, false, "persistent fines");
-        if (!Settings.SocialCreditLossOnDeath.Value) Lib.GameMessage.Broadcast("You were fined " + PreviousFines + "cr");
+        int currentFines = SkipFineEscapeCheckPatch.GetTotalActiveFines();
+        int totalFines = PreviousFines + currentFines;
+        if (Settings.FineReducedBySocialCreditRating.Value) totalFines /= GameplayController.Instance.GetCurrentSocialCreditLevel();
+        //Game will have already deducted active fines but because we are taking them into account when applying the modifier, we need to give them back.
+        int actualFinesToDeuct = totalFines - currentFines;
+        GameplayController.Instance.AddMoney(-actualFinesToDeuct, false, "persistent fines");
+        Lib.GameMessage.Broadcast("You were fined " + totalFines + "cr");
     }
 
     internal static string Save()
