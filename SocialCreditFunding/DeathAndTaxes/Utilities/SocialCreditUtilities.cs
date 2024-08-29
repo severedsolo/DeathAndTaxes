@@ -26,6 +26,12 @@ internal static class SocialCreditUtilities
         }
     }
 
+    public static int GetNormalisedSocialCreditLevel()
+    {
+        int SocialCreditLevel = GameplayController.Instance.GetCurrentSocialCreditLevel();
+        return Math.Min(10, SocialCreditLevel);
+    }
+
     public static void SetSocialCreditPayouts()
     {
         GameplayControls.Instance.socialCreditForMurders = Settings.SocialCreditForMurderSolve.Value;

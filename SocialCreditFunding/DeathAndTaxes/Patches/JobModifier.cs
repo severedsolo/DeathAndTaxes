@@ -8,8 +8,7 @@ namespace DeathAndTaxes.Patches;
 [HarmonyPatch(typeof(Case), nameof(Case.Resolve))]
 internal class JobModifier
 {
-    private static int SocialCreditLevel => GameplayController.Instance.GetCurrentSocialCreditLevel();
-    private static int TaxRate => Math.Max((10 - SocialCreditLevel) * Settings.IncomeTaxModifier.Value, 0);
+    private static int TaxRate => SocialCreditUtilities.GetNormalisedSocialCreditLevel() * Settings.IncomeTaxModifier.Value;
 
     private static string TaxStringForPlayer
     {
