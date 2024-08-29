@@ -41,10 +41,12 @@ internal class PatchSocialCreditLossOnFined
         if (!Settings.PersistentFines.Value) return;
         int currentFines = SkipFineEscapeCheckPatch.GetTotalActiveFines();
         int totalFines = PreviousFines + currentFines;
-        if (Settings.FineReducedBySocialCreditRating.Value) totalFines /= SocialCreditUtilities.GetNormalisedSocialCreditLevel();
+        float fineModifier = 1f;
+        if (Settings.FineReducedBySocialCreditRating.Value) fineModifier = 1-((SocialCreditUtilities.GetNormalisedSocialCreditLevel() - 1)/10f);
+        totalFines = (int)(totalFines*fineModifier);
         //Game will have already deducted active fines but because we are taking them into account when applying the modifier, we need to give them back.
-        int actualFinesToDeuct = totalFines - currentFines;
-        GameplayController.Instance.AddMoney(-actualFinesToDeuct, false, "persistent fines");
+        int actualFinesToDeduct = totalFines - currentFines;
+        GameplayController.Instance.AddMoney(-actualFinesToDeduct, false, "persistent fines");
         Lib.GameMessage.Broadcast("You were fined " + totalFines + "cr");
     }
 

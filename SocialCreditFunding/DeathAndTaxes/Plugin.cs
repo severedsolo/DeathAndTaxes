@@ -17,7 +17,7 @@ public class Plugin : PluginController<Plugin>
 {
     public const string PLUGIN_GUID = "Severedsolo.SOD.DeathAndTaxes";
     public const string PLUGIN_NAME = "DeathAndTaxes";
-    public const string PLUGIN_VERSION = "1.0.0";
+    public const string PLUGIN_VERSION = "1.2.0";
     
     public override void Load()
     {
