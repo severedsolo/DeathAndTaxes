@@ -53,6 +53,7 @@ internal class JobModifier
         return objectivesCorrect;
     }
 
+    //As the game never registers "arrest the kidnapper" as completed, skip it and give the player credit anyway
     private static bool IsKidnapperArrestQuestion(Case.ResolveQuestion resolveQuestion)
     {
         return resolveQuestion.name.ToLower().Contains("arrest") &&
