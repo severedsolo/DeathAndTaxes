@@ -47,10 +47,16 @@ internal class JobModifier
         int objectivesCorrect = 0;
         foreach (var resolveQuestion in job.resolveQuestions)
         {
-            if (!resolveQuestion.isCorrect) continue;
+            if (!resolveQuestion.isCorrect && !IsKidnapperArrestQuestion(resolveQuestion)) continue;
             objectivesCorrect++;
         }
         return objectivesCorrect;
+    }
+
+    private static bool IsKidnapperArrestQuestion(Case.ResolveQuestion resolveQuestion)
+    {
+        return resolveQuestion.name.ToLower().Contains("arrest") &&
+               resolveQuestion.name.ToLower().Contains("kidnapper");
     }
 
     private static int TotalTax(Case job)
@@ -90,7 +96,7 @@ internal class JobModifier
 
     private static bool IsMurder(Case job)
     {
-        return job.caseType == Case.CaseType.murder || job.caseType == Case.CaseType.mainStory;
+        return job.caseType is Case.CaseType.murder or Case.CaseType.mainStory;
     }
 
     private static bool ClientIsHappy(float percentageOfObjectivesComplete, Case job)
