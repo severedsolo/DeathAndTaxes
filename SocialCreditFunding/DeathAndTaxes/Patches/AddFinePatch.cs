@@ -13,12 +13,11 @@ public class AddFinePatch
 
     private static bool PlayerCanBeSeen()
     {
-        NewGameLocation? playersLocation = Player.Instance?.currentGameLocation;
+        NewGameLocation playersLocation = Player.Instance.currentGameLocation;
         if (playersLocation == null) return false;
-        //If we're indoors, just assume if they are in the same room they can see you. Lazy check so we're not constantly looping.
-        if (playersLocation.currentOccupants.Count > 0 && !playersLocation.isOutside) return true;
-        List<Actor>? allPeopleAtLocation = Player.Instance?.currentGameLocation?.thisAsAddress?.currentOccupants?.ToList();
-        if (allPeopleAtLocation == null) return false;
+        List<Actor> allPeopleAtLocation;
+        if (playersLocation.thisAsAddress == null) allPeopleAtLocation = playersLocation.currentOccupants.ToList();
+        else allPeopleAtLocation = playersLocation.thisAsAddress.currentOccupants.ToList();
         for (int i = 0; i < allPeopleAtLocation.Count; i++)
         {
             Actor a = allPeopleAtLocation[i];

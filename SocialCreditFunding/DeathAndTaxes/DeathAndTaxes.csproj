@@ -19,21 +19,27 @@
 
 	<ItemGroup>
 		<PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
-		<PackageReference Include="SOD.Common" Version="2.0.4" />
+		<PackageReference Include="SOD.Common" Version="2.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="Assembly-CSharp">
-	    <HintPath>bin\Debug\net6.0\Assembly-CSharp.dll</HintPath>
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\Assembly-CSharp.dll</HintPath>
 	  </Reference>
 	  <Reference Include="Il2Cppmscorlib">
-	    <HintPath>bin\Debug\net6.0\Il2Cppmscorlib.dll</HintPath>
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppSystem">
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\Il2CppSystem.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Il2CppSystem.Core">
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine">
-	    <HintPath>bin\Debug\net6.0\UnityEngine.dll</HintPath>
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\UnityEngine.dll</HintPath>
 	  </Reference>
 	  <Reference Include="UnityEngine.CoreModule">
-	    <HintPath>bin\Debug\net6.0\UnityEngine.CoreModule.dll</HintPath>
+	    <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Shadows of Doubt\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
