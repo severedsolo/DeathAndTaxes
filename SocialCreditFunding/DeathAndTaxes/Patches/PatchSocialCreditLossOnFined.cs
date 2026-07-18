@@ -19,22 +19,11 @@ internal class PatchSocialCreditLossOnFined
     [HarmonyPostfix]
     private static void Postfix()
     {
-        FinePlayerSocialCredit();
         FinePlayerMoney();
         PreviousFines = 0;
     }
 
-    private static void FinePlayerSocialCredit()
-    {
-        if (!Settings.SocialCreditLossOnDeath.Value) return;
-        int totalFines = PreviousFines + SkipFineEscapeCheckPatch.GetTotalActiveFines();
-        int socialCreditToDeduct = (int)(totalFines * Settings.FinedSocialCreditLossModifier.Value);
-        GameplayController.Instance.AddSocialCredit(-socialCreditToDeduct, true, "Player was fined " + totalFines);
-        Lib.GameMessage.Broadcast("You lost " + socialCreditToDeduct + " social credit");
-        Plugin.SCFLog("Player was fined " + totalFines, LogLevel.Info);
-        Plugin.SCFLog("Deducted " + socialCreditToDeduct + " social credit from player", LogLevel.Info);
-        SocialCreditUtilities.AdjustPerksToLevel();
-    }
+
 
     private static void FinePlayerMoney()
     {

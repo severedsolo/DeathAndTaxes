@@ -63,7 +63,7 @@ public class Plugin : PluginController<Plugin>
         Settings.LandValueTaxEnabled = Config.Bind("Taxes", "DeathAndTaxes.LandValueTaxEnabled", true, "Should a \"land value\" tax be applied every day?");
         Settings.LandValueTaxRate = Config.Bind("Taxes", "DeathAndTaxes.LandValueTaxRate", 0.1f, "What percentage of the properties value should be taxed? (1 is 100%) (requires LandValueTaxEnabled to be true)");
         Settings.SocialCreditLossOnDeath = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditLossOnDeath", true, "Apply a social credit penalty when detained?");
-        Settings.FinedSocialCreditLossModifier = Config.Bind("SocialCredit", "DeathAndTaxes.FinedSocialCreditLossModifier", 0.1f, "What percentage of fines should be converted to social credit (1=100%)? (Requires SocialCreditLossOnDeath to be true)");
+        Settings.FinedSocialCreditLossModifier = Config.Bind("SocialCredit", "DeathAndTaxes.FinedSocialCreditLossModifier", 0.01f, "What percentage of fines should be converted to social credit (1=100%)? (Requires SocialCreditLossOnDeath to be true)");
         Settings.PersistentFines = Config.Bind("Difficulty", "DeathAndTaxes.PersistentFines", true, "Should fines be persistent (ie not lost when you exit a building)?");
         Settings.EnableLogging = Config.Bind("Debugging", "DeathAndTaxes.EnableLogging", false, "Should logging in the console be enabled.");
         Settings.FineReducedBySocialCreditRating = Config.Bind("Difficulty", "DeathAndTaxes.FineReducedBySocialCreditRating", false, "Should fines be reduced the higher up the social credit ladder you are?");

@@ -1,4 +1,6 @@
+using DeathAndTaxes.Utilities;
 using HarmonyLib;
+using SOD.Common;
 using SOD.Common.Extensions;
 
 namespace DeathAndTaxes.Patches;
@@ -22,6 +24,19 @@ internal class SkipFineEscapeCheckPatch
         //Stop it logging on every check. We only need to log when it actually changes
         if (PatchSocialCreditLossOnFined.PreviousFines == lastFineAmount) return;
         Plugin.SCFLog("Fines cleared. New total fines are " + PatchSocialCreditLossOnFined.PreviousFines, LogLevel.Info);
+        FinePlayerSocialCredit();
+    }
+    
+    private static void FinePlayerSocialCredit()
+    {
+        if (!Settings.SocialCreditLossOnDeath.Value) return;
+        int totalFines = GetTotalActiveFines();
+        int socialCreditToDeduct = (int)(totalFines * Settings.FinedSocialCreditLossModifier.Value);
+        GameplayController.Instance.AddSocialCredit(-socialCreditToDeduct, true, "Player was fined " + totalFines);
+        Lib.GameMessage.Broadcast("You lost " + socialCreditToDeduct + " social credit");
+        Plugin.SCFLog("Player was fined " + totalFines, LogLevel.Info);
+        Plugin.SCFLog("Deducted " + socialCreditToDeduct + " social credit from player", LogLevel.Info);
+        SocialCreditUtilities.AdjustPerksToLevel();
     }
 
     internal static int GetTotalActiveFines()
