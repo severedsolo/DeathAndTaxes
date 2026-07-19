@@ -62,13 +62,13 @@ public class Plugin : PluginController<Plugin>
         Settings.CanFailCompletedCases = Config.Bind("Difficulty", "DeathAndTaxes.CanFailCompletedCases", true, "If you don't complete all objectives on a case, is there a chance you could \"fail\" and have social credit deducted? (requires AdjustSocialCreditOnJobCompletion to be true)");
         Settings.LandValueTaxEnabled = Config.Bind("Taxes", "DeathAndTaxes.LandValueTaxEnabled", true, "Should a \"land value\" tax be applied every day?");
         Settings.LandValueTaxRate = Config.Bind("Taxes", "DeathAndTaxes.LandValueTaxRate", 0.1f, "What percentage of the properties value should be taxed? (1 is 100%) (requires LandValueTaxEnabled to be true)");
-        Settings.SocialCreditLossOnDeath = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditLossOnDeath", true, "Apply a social credit penalty when detained?");
+        Settings.SocialCreditLossOnDeath = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditLossOnFined", true, "Apply a social credit penalty when escaping a fine?");
         Settings.FinedSocialCreditLossModifier = Config.Bind("SocialCredit", "DeathAndTaxes.FinedSocialCreditLossModifier", 0.01f, "What percentage of fines should be converted to social credit (1=100%)? (Requires SocialCreditLossOnDeath to be true)");
         Settings.PersistentFines = Config.Bind("Difficulty", "DeathAndTaxes.PersistentFines", true, "Should fines be persistent (ie not lost when you exit a building)?");
         Settings.EnableLogging = Config.Bind("Debugging", "DeathAndTaxes.EnableLogging", false, "Should logging in the console be enabled.");
         Settings.FineReducedBySocialCreditRating = Config.Bind("Difficulty", "DeathAndTaxes.FineReducedBySocialCreditRating", false, "Should fines be reduced the higher up the social credit ladder you are?");
         Settings.SocialCreditForMurderSolve = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditForMurderSolve", 500, "How much social credit should a murder case pay? (before any modifiers)");
-        Settings.SocialCreditForSideJobSolve = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditForSideJobSolve", 250, "How much social credit should a murder case pay? (before any modifiers)");
+        Settings.SocialCreditForSideJobSolve = Config.Bind("SocialCredit", "DeathAndTaxes.SocialCreditForSideJobSolve", 250, "How much social credit should a side job pay? (before any modifiers)");
         SCFLog("Bound all configs", LogLevel.Info, true);
     }
 
