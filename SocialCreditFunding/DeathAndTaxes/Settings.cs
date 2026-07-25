@@ -12,7 +12,7 @@ public static class Settings
     public static ConfigEntry<bool> CanFailCompletedCases { get; set; }
     public static ConfigEntry<bool> LandValueTaxEnabled { get; set; }
     public static ConfigEntry<float> LandValueTaxRate { get; set; }
-    public static ConfigEntry<bool> SocialCreditLossOnDeath { get; set; }
+    public static ConfigEntry<bool> SocialCreditLossOnFine { get; set; }
     public static ConfigEntry<float> FinedSocialCreditLossModifier { get; set; }
     public static ConfigEntry<bool> PersistentFines { get; set; }
     public static ConfigEntry<bool> EnableLogging { get; set; }
@@ -21,4 +21,6 @@ public static class Settings
     public static ConfigEntry<int> SocialCreditForMurderSolve { get; set; }
     
     public static ConfigEntry<int> SocialCreditForSideJobSolve { get; set; }
+    
+    
 }

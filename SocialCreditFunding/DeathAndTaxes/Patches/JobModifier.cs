@@ -47,17 +47,10 @@ internal class JobModifier
         int objectivesCorrect = 0;
         foreach (var resolveQuestion in job.resolveQuestions)
         {
-            if (!resolveQuestion.isCorrect && !IsKidnapperArrestQuestion(resolveQuestion)) continue;
+            if (!resolveQuestion.isCorrect) continue;
             objectivesCorrect++;
         }
         return objectivesCorrect;
-    }
-
-    //As the game never registers "arrest the kidnapper" as completed, skip it and give the player credit anyway
-    private static bool IsKidnapperArrestQuestion(Case.ResolveQuestion resolveQuestion)
-    {
-        return resolveQuestion.name.ToLower().Contains("arrest") &&
-               resolveQuestion.name.ToLower().Contains("kidnapper");
     }
 
     private static int TotalTax(Case job)

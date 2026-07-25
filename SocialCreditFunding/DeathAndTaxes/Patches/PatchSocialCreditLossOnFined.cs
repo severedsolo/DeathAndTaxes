@@ -1,6 +1,8 @@
 using DeathAndTaxes.Utilities;
 using HarmonyLib;
 using SOD.Common;
+using SOD.Common.Extensions;
+using Il2CppSystem.Collections.Generic;
 
 namespace DeathAndTaxes.Patches;
 
@@ -14,6 +16,16 @@ internal class PatchSocialCreditLossOnFined
     internal static void Prefix()
     {
         PlayerWasRecentlyKnockedOut = true;
+        foreach (Il2CppSystem.Collections.Generic.KeyValuePair<StatusController.StatusInstance, Il2CppSystem.Collections.Generic.List<StatusController.StatusCount>> status in StatusController.Instance.activeStatusCounts)
+        {
+            Il2CppSystem.Collections.Generic.List<StatusController.StatusCount> fines = status.Value;
+            for (int i = 0; i < status.Value.Count; i++)
+            {
+                StatusController.StatusCount sc = fines[i];
+                if (sc.fineRecord != null && sc.fineRecord.confirmed) continue;
+                sc.Remove();
+            }
+        }
     }
 
     [HarmonyPostfix]
@@ -41,7 +53,7 @@ internal class PatchSocialCreditLossOnFined
 
     internal static string Save()
     {
-        if (!Settings.SocialCreditLossOnDeath.Value) return string.Empty;
+        if (!Settings.SocialCreditLossOnFine.Value) return string.Empty;
         int totalFines = PreviousFines + SkipFineEscapeCheckPatch.GetTotalActiveFines();
         return totalFines.ToString();
     }

@@ -8,7 +8,7 @@ namespace DeathAndTaxes.Patches;
 [HarmonyPatch(typeof(StatusController), nameof(StatusController.FineEscapeCheck))]
 internal class SkipFineEscapeCheckPatch
 {
-    
+    internal static NewBuilding lastKnownLocation = null;   
     private static bool FinesAreConfirmed
     {
         get
@@ -32,8 +32,10 @@ internal class SkipFineEscapeCheckPatch
         if (PatchSocialCreditLossOnFined.PlayerWasRecentlyKnockedOut)
         {
             PatchSocialCreditLossOnFined.PlayerWasRecentlyKnockedOut = false;
+            FinePlayerSocialCredit();
             return;
         }
+        if (lastKnownLocation != null && lastKnownLocation == Player.Instance.currentGameLocation.building) return;
         PatchSocialCreditLossOnFined.PreviousFines += GetTotalActiveFines();
         //Stop it logging on every check. We only need to log when it actually changes
         if (PatchSocialCreditLossOnFined.PreviousFines == lastFineAmount) return;
@@ -43,7 +45,7 @@ internal class SkipFineEscapeCheckPatch
     
     private static void FinePlayerSocialCredit()
     {
-        if (!Settings.SocialCreditLossOnDeath.Value) return;
+        if (!Settings.SocialCreditLossOnFine.Value) return;
         int totalFines = GetTotalActiveFines();
         int socialCreditToDeduct = (int)(totalFines * Settings.FinedSocialCreditLossModifier.Value);
         GameplayController.Instance.AddSocialCredit(-socialCreditToDeduct, true, "Player was fined " + totalFines);
@@ -56,12 +58,6 @@ internal class SkipFineEscapeCheckPatch
     internal static int GetTotalActiveFines()
     {
         int totalFines = 0;
-        /*Feature request to "only add if someone sees you" - not possible without doing a really expensive wide-ranging raycast,
-         but we can approximate it with "confirmed" which the game says means "someone spotted you" - we'll assume "if someone saw you then evidence was also found of your other crimes
-         and/or "it was attributed to you because you were also acting illegally and the Enforcers are dicks"
-         */  
-        
-        if (!FinesAreConfirmed) return 0;
         foreach (Il2CppSystem.Collections.Generic.KeyValuePair<StatusController.StatusInstance, Il2CppSystem.Collections.Generic.List<StatusController.StatusCount>> status in StatusController.Instance.activeStatusCounts)
         {
             if (status.Key.building != null && status.Key.building == Player.Instance.currentGameLocation.building) continue;
@@ -69,10 +65,10 @@ internal class SkipFineEscapeCheckPatch
             for (int i = 0; i < status.Value.Count; i++)
             {
                 StatusController.StatusCount sc = fines[i];
+                if (sc.fineRecord != null && !sc.fineRecord.confirmed) continue;
                 totalFines += sc.GetPenaltyAmount();
             }
         }
-
         return totalFines;
     }
 }
